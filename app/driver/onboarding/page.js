@@ -1,56 +1,56 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function Onboarding() {
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    ambulanceType: 'BLS',
-    licenseNumber: '',
+    name: "",
+    phone: "",
+    ambulanceType: "BLS",
+    licenseNumber: "",
     location: { lat: 0, lng: 0 },
     fixedPrice: 500,
     variablePrice: 20,
-    ambulanceNumber: '',
-    status: 'offline',
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const router = useRouter();
+    ambulanceNumber: "",
+    status: "offline",
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const router = useRouter()
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+    e.preventDefault()
+    setLoading(true)
+    setError("")
 
     try {
-      const response = await fetch('/api/drivers/onboard', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/drivers/onboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Failed to onboard driver');
+        throw new Error("Failed to onboard driver")
       }
 
-      const data = await response.json();
-      console.log('Driver onboarded:', data);
-      router.push('/driver/dashboard');
+      const data = await response.json()
+      console.log("Driver onboarded:", data)
+      router.push("/driver/dashboard")
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
+    <div className="min-h-screen mt-9 flex flex-col items-center justify-center bg-gray-50 p-6">
       <h1 className="text-3xl font-bold text-red-600 mb-6">Driver Onboarding</h1>
       <form onSubmit={handleSubmit} className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
         <div className="mb-4">
@@ -138,10 +138,11 @@ export default function Onboarding() {
           disabled={loading}
           className="w-full bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-all"
         >
-          {loading ? 'Submitting...' : 'Submit'}
+          {loading ? "Submitting..." : "Submit"}
         </button>
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </form>
     </div>
-  );
+  )
 }
+

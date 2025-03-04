@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const BookingSchema = new mongoose.Schema({
   userPhone: {
     type: String,
     required: true,
     validate: {
-      validator: function (v) {
-        return /^\d{10}$/.test(v); // Validate phone number format
+      validator: (v) => {
+        return /^\d{10}$/.test(v) // Validate phone number format
       },
-      message: props => `${props.value} is not a valid phone number!`,
+      message: (props) => `${props.value} is not a valid phone number!`,
     },
   },
   userName: {
@@ -25,8 +25,8 @@ const BookingSchema = new mongoose.Schema({
     location: {
       type: {
         type: String,
-        enum: ['Point'],
-        default: 'Point',
+        enum: ["Point"],
+        default: "Point",
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
@@ -37,8 +37,8 @@ const BookingSchema = new mongoose.Schema({
   pickupLocation: {
     type: {
       type: String,
-      enum: ['Point'],
-      default: 'Point',
+      enum: ["Point"],
+      default: "Point",
     },
     coordinates: {
       type: [Number], // [longitude, latitude]
@@ -48,7 +48,7 @@ const BookingSchema = new mongoose.Schema({
   ambulanceType: {
     type: String,
     required: true,
-    enum: ['BLS', 'ALS - with EMT', 'ALS - without EMT'],
+    enum: ["BLS", "ALS - with EMT", "ALS - without EMT"],
   },
   distance: {
     type: Number,
@@ -62,12 +62,12 @@ const BookingSchema = new mongoose.Schema({
   },
   driver: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Driver',
+    ref: "Driver",
   },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'arrived', 'completed', 'cancelled'],
-    default: 'pending',
+    enum: ["pending", "accepted", "arrived", "completed", "cancelled"],
+    default: "pending",
   },
   createdAt: {
     type: Date,
@@ -82,9 +82,12 @@ const BookingSchema = new mongoose.Schema({
   completedAt: {
     type: Date,
   },
-});
+})
 
 // Add geospatial index for pickupLocation
-BookingSchema.index({ pickupLocation: '2dsphere' });
+BookingSchema.index({ pickupLocation: "2dsphere" })
 
-module.exports = mongoose.model('Booking', BookingSchema);
+module.exports = mongoose.models.Booking || mongoose.model("Booking", BookingSchema)
+
+// export default mongoose.models.Booking || mongoose.model("Booking", BookingSchema)
+

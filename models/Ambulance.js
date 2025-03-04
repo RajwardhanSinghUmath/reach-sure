@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
 
 const ambulanceSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -8,7 +8,7 @@ const ambulanceSchema = new mongoose.Schema({
   location: {
     type: {
       type: String,
-      enum: ['Point'],
+      enum: ["Point"],
       required: true,
     },
     coordinates: {
@@ -19,10 +19,12 @@ const ambulanceSchema = new mongoose.Schema({
   fixedPrice: { type: Number, required: true },
   variablePrice: { type: Number, required: true },
   ambulanceNumber: { type: String, required: true },
-  status: { type: String, enum: ['online', 'offline'], default: 'online' },
-});
+  status: { type: String, enum: ["online", "offline"], default: "online" },
+})
 
 // Create a 2dsphere index for geospatial queries
-ambulanceSchema.index({ location: '2dsphere' });
+ambulanceSchema.index({ location: "2dsphere" })
 
-export default mongoose.models.Ambulance || mongoose.model('Ambulance', ambulanceSchema);
+module.exports = mongoose.models.Ambulance || mongoose.model("Ambulance", ambulanceSchema)
+
+// export default mongoose.models.Ambulance || mongoose.model("Ambulance", ambulanceSchema)

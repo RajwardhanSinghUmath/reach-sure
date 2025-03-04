@@ -1,26 +1,28 @@
-import connectDB from '@/app/utils/db'; // Correct import path
-import Ambulance from '@/models/Ambulance';
-import Hospital from '@/models/Hospital'; // Ensure Hospital model is imported
+import connectDB from "@/app/utils/db"
+import Ambulance from "@/models/Ambulance"
+import Hospital from "@/models/Hospital"
 
 export async function GET(request) {
-  await connectDB(); // Ensure MongoDB connection
+  await connectDB()
 
   try {
-    const { searchParams } = new URL(request.url);
-    const hospitalId = searchParams.get('hospitalId');
+    const { searchParams } = new URL(request.url)
+    const hospitalId = searchParams.get("hospitalId")
 
     if (!hospitalId) {
-      return new Response(JSON.stringify({ error: 'Hospital ID is required' }), {
+      return new Response(JSON.stringify({ error: "Hospital ID is required" }), {
         status: 400,
-      });
+        headers: { "Content-Type": "application/json" },
+      })
     }
 
     // Fetch hospital location
-    const hospital = await Hospital.findById(hospitalId);
+    const hospital = await Hospital.findById(hospitalId)
     if (!hospital) {
-      return new Response(JSON.stringify({ error: 'Hospital not found' }), {
+      return new Response(JSON.stringify({ error: "Hospital not found" }), {
         status: 404,
-      });
+        headers: { "Content-Type": "application/json" },
+      })
     }
 
     // Fetch ambulances within 10 km radius
@@ -28,22 +30,25 @@ export async function GET(request) {
       location: {
         $near: {
           $geometry: {
-            type: 'Point',
-            coordinates: hospital.location.coordinates, // [longitude, latitude]
+            type: "Point",
+            coordinates: hospital.location.coordinates,
           },
           $maxDistance: 10000, // 10 km in meters
         },
       },
-      status: 'online', // Only fetch online ambulances
-    });
+      status: "online",
+    })
 
     return new Response(JSON.stringify({ ambulances }), {
       status: 200,
-    });
+      headers: { "Content-Type": "application/json" },
+    })
   } catch (error) {
-    console.error('Error fetching ambulances:', error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch ambulances' }), {
+    console.error("Error fetching ambulances:", error)
+    return new Response(JSON.stringify({ error: "Failed to fetch ambulances" }), {
       status: 500,
-    });
+      headers: { "Content-Type": "application/json" },
+    })
   }
 }
+

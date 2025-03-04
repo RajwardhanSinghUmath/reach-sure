@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const DriverSchema = new mongoose.Schema({
   name: {
@@ -11,16 +11,16 @@ const DriverSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator: function (v) {
-        return /^\d{10}$/.test(v); // Validate phone number format
+      validator: (v) => {
+        return /^\d{10}$/.test(v) // Validate phone number format
       },
-      message: props => `${props.value} is not a valid phone number!`,
+      message: (props) => `${props.value} is not a valid phone number!`,
     },
   },
   ambulanceType: {
     type: String,
     required: true,
-    enum: ['BLS', 'ALS - with EMT', 'ALS - without EMT'],
+    enum: ["BLS", "ALS - with EMT", "ALS - without EMT"],
   },
   licenseNumber: {
     type: String,
@@ -31,8 +31,8 @@ const DriverSchema = new mongoose.Schema({
   location: {
     type: {
       type: String,
-      enum: ['Point'],
-      default: 'Point',
+      enum: ["Point"],
+      default: "Point",
     },
     coordinates: {
       type: [Number], // [longitude, latitude]
@@ -60,16 +60,19 @@ const DriverSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['online', 'offline', 'busy'],
-    default: 'offline',
+    enum: ["online", "offline", "busy"],
+    default: "offline",
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
-});
+})
 
 // Add geospatial index for location
-DriverSchema.index({ location: '2dsphere' });
+DriverSchema.index({ location: "2dsphere" })
 
-module.exports = mongoose.model('Driver', DriverSchema);
+module.exports = mongoose.models.Driver || mongoose.model("Driver", DriverSchema)
+
+// export default mongoose.models.Driver || mongoose.model("Driver", DriverSchema)
+

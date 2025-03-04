@@ -1,25 +1,22 @@
+import mongoose from "mongoose"
 
-const mongoose = require('mongoose');
-
-const MONGO_URI = "mongodb+srv://rajwardhansinghumath:EccfpsaRmU6wBZXg@cluster0.p2gfo.mongodb.net/reach-sure?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI =
+  process.env.MONGODB_URI ||
+  "mongodb+srv://rajwardhansinghumath:EccfpsaRmU6wBZXg@cluster0.p2gfo.mongodb.net/reach-sure?retryWrites=true&w=majority&appName=Cluster0"
 
 const connectDB = async () => {
   try {
     if (mongoose.connection.readyState >= 1) {
-      console.log('⚡ MongoDB already connected');
-      return;
+      return
     }
 
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-
-    console.log('✅ MongoDB connected successfully');
+    await mongoose.connect(MONGODB_URI)
+    console.log("MongoDB connected successfully")
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error);
-    process.exit(1);
+    console.error("MongoDB connection error:", error)
+    throw new Error("Failed to connect to database")
   }
-};
+}
 
-module.exports = connectDB;
+export default connectDB
+
